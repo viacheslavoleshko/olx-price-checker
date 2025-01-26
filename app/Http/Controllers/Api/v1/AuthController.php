@@ -33,7 +33,12 @@ class AuthController extends Controller
 
         $token = $registeredUser->createToken('api-token')->plainTextToken;
 
-        return response(['user' => $registeredUser, 'access_token' => $token], Response::HTTP_CREATED);
+        return response([
+            'user' => $registeredUser, 
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'expires_in' => config('sanctum.expiration') * 60,
+        ], Response::HTTP_CREATED);
 
     }
 

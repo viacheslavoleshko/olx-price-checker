@@ -40,21 +40,14 @@ class CheckUrlPrice implements ShouldQueue
         $endpointUrl = config('services.olx.get_advert_endpoint')($this->baseUrl, $advertId);
         $response = Http::acceptJson()->withToken($this->token)->get($endpointUrl);
         
-        // if($this->advert->title === null || $this->advert->title != $response->json()['data']['title'] || $this->advert->url != $response->json()['data']['url']) {
-        //     $this->advert->update([
-        //         'title' => $response->json()['data']['title'],
-        //         'url' => $response->json()['data']['url'],
-        //     ]);
-        // }
+        if($this->advert->title === null || $this->advert->title != $response->json()['data']['title'] || $this->advert->url != $response->json()['data']['url']) {
+            $this->advert->update([
+                'title' => $response->json()['data']['title'],
+                'url' => $response->json()['data']['url'],
+            ]);
+        }
 
-        // $price = $response->json()['data']['price'];
-        $price = [
-            'value' => 9999,
-            'currency' => 'USD',
-            'negotiable' => true,
-            'trade' => true,
-            'budget' => true,
-        ];
+        $price = $response->json()['data']['price'];
 
         $latestPrice = $this->advert->prices()->latest('created_at')->first();
 

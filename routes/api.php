@@ -41,14 +41,6 @@ Route::group([
     });
 
     Route::group([
-        'prefix' => 'checker',
-        'middleware' => ['auth:api' ,'verified'],
-    ], function () {
-        Route::get('/', [CheckerController::class, 'index'])->name('checkers');
-        Route::post('/', [CheckerController::class, 'store'])->name('checkers.store');
-    });
-
-    Route::group([
         'prefix' => 'advert',
         'middleware' => ['auth:api' ,'verified'],
     ], function () {
