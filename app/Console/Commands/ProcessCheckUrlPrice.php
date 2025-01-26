@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use App\Models\Advert;
 use App\Jobs\CheckUrlPrice;
 use Illuminate\Console\Command;
+use App\UseCases\Services\ApiAdvertProvider;
+use App\UseCases\Services\WebPageAdvertProvider;
 
 class ProcessCheckUrlPrice extends Command
 {
@@ -20,7 +22,7 @@ class ProcessCheckUrlPrice extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Process check URL price';
 
     /**
      * Execute the console command.

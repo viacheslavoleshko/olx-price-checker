@@ -11,6 +11,7 @@ class Advert extends Model
     use HasFactory;
 
     protected $fillable = [
+        'title',
         'url',
     ];
 

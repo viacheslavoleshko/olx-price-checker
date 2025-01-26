@@ -6,65 +6,66 @@ use App\Models\User;
 use App\Models\Advert;
 use App\Jobs\SendPriceUpdateEmails;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use App\UseCases\Services\ApiAdvertProvider;
+use App\UseCases\Services\WebPageAdvertProvider;
 
 class CheckUrlPrice implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    
-    public string $baseUrl;
-    public string $token;
+    use Dispatchable, InteractsWithQueue, Queueable;
+
     public Advert $advert;
+
     /**
      * Create a new job instance.
      */
     public function __construct(Advert $advert)
     {
-        $this->baseUrl = config('services.olx.base_url') ?? '';
-        $this->token = config('services.olx.token') ?? '';
         $this->advert = $advert;
     }
 
     /**
      * Execute the job.
      */
-    public function handle(): void
+    public function handle(ApiAdvertProvider $apiAdvertProvider, WebPageAdvertProvider $webPageAdvertProvider): void
     {
-        $advertId = $this->extractAdvertIdFromUrl($this->advert->url);
-    
-        $endpointUrl = config('services.olx.get_advert_endpoint')($this->baseUrl, $advertId);
-        $response = Http::acceptJson()->withToken($this->token)->get($endpointUrl);
-        
-        if($this->advert->title === null || $this->advert->title != $response->json()['data']['title'] || $this->advert->url != $response->json()['data']['url']) {
-            $this->advert->update([
-                'title' => $response->json()['data']['title'],
-                'url' => $response->json()['data']['url'],
-            ]);
+        $advertData = $apiAdvertProvider->getAdvertData($this->advert->url);
+
+        if (empty($advertData)) {
+            $advertData = $webPageAdvertProvider->getAdvertData($this->advert->url);
         }
 
-        $price = $response->json()['data']['price'];
+        if ($advertData) {
+            if ($this->advert->title != $advertData->title || $this->advert->url != $advertData->url) {
+                $this->advert->update([
+                    'title' => $advertData->title,
+                    'url' => $advertData->url,
+                ]);
+            }
+    
+            $latestPrice = $this->advert->prices()->latest('created_at')->first();
+    
+            if(!$latestPrice || $latestPrice->value != $advertData->value) {
+                $this->advert->prices()->create([
+                    'value' => $advertData->value,
+                    'currency' => $advertData->currency,
+                    'negotiable' => $advertData->negotiable,
+                    'trade' => $advertData->trade,
+                    'budget' => $advertData->budget,
+                ]);
+    
+                User::subscribers($this->advert->id)->chunk(100, function ($users) {
+                    $emails = $users->pluck('email')->toArray();
+                    dispatch(new SendPriceUpdateEmails($this->advert, $emails));
+                });
 
-        $latestPrice = $this->advert->prices()->latest('created_at')->first();
 
-
-        if($latestPrice === null || $latestPrice->value != $price['value']) {
-            $this->advert->prices()->create([
-                'value' => $price['value'],
-                'currency' => $price['currency'],
-                'negotiable' => $price['negotiable'],
-                'trade' => $price['trade'],
-                'budget' => $price['budget'],
-            ]);
-
-            User::subscribers($this->advert->id)->chunk(100, function ($users) {
-                $emails = $users->pluck('email')->toArray();
-                dispatch(new SendPriceUpdateEmails($this->advert, $emails));
-            });
+            }
+        } else {
+            Log::error("Advert data not found for advert with ID: {$this->advert->id}");
         }
     }
 
