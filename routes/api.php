@@ -1,11 +1,13 @@
 <?php
 
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Api\v1\AuthController;
 use App\Http\Controllers\Api\v1\CheckerController;
+use App\Http\Controllers\Api\v1\AdvertController;
 use App\Http\Controllers\Api\v1\VerifyEmailController;
 
 Route::group([
@@ -16,12 +18,12 @@ Route::group([
         'prefix' => 'auth',
     ], function () {
         Route::group(['middleware' => 'guest'], function () {
-            Route::post('register', [AuthController::class, 'register'])->name('Auth.register');
-            Route::post('login', [AuthController::class, 'login'])->name('Auth.login');
+            Route::post('register', [AuthController::class, 'register'])->name('auth.register');
+            Route::post('login', [AuthController::class, 'login'])->name('auth.login');
         });
     
         Route::group(['middleware' => 'auth:api'], function () {
-            Route::post('logout', [AuthController::class, 'logout'])->name('Auth.logout');
+            Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
         });
     });
 
@@ -42,7 +44,16 @@ Route::group([
         'prefix' => 'checker',
         'middleware' => ['auth:api' ,'verified'],
     ], function () {
-        Route::get('/', [CheckerController::class, 'index'])->name('domains')->name('checkers');
-        Route::post('/', [CheckerController::class, 'store'])->name('domains')->name('checkers.store');
+        Route::get('/', [CheckerController::class, 'index'])->name('checkers');
+        Route::post('/', [CheckerController::class, 'store'])->name('checkers.store');
+    });
+
+    Route::group([
+        'prefix' => 'advert',
+        'middleware' => ['auth:api' ,'verified'],
+    ], function () {
+        Route::get('/prices', [AdvertController::class, 'index'])->name('advert.prices');
+        Route::get('/{advert}/prices', [AdvertController::class, 'show'])->name('advert.advertprices');
+        Route::post('/subscribe', [AdvertController::class, 'subscribe'])->name('advert.subscribe');
     });
 });

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -46,11 +47,30 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    /**
+     * Scope a query to only include users subscribed to a specific advert.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $advertId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSubscribers($query, $advertId): Builder
+    {
+        return $query->whereHas('adverts', function ($query) use ($advertId) {
+            $query->where('advert_id', $advertId);
+        });
+    }
+
     public static function register(string $email, string $password): self
     {
         return static::create([
             'email' => $email,
             'password' => $password,
         ]);
+    }
+
+    public function adverts()
+    {
+        return $this->belongsToMany(Advert::class);
     }
 }

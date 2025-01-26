@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    'olx' => [
+        'token' => env('OLX_API_KEY'),
+        'base_url' => env('OLX_URL', 'https://www.olx.ua/api/partner'),
+        'get_advert_endpoint' => function (string $baseUrl, string $advertId): string {
+            return "$baseUrl/adverts/$advertId";
+        },
+    ],
 ];
