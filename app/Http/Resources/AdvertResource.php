@@ -18,6 +18,7 @@ class AdvertResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title ?? null,
             'url' => $this->url,
+            'is_active' => $this->is_active,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'prices' => PriceResource::collection($this->prices),

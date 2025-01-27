@@ -61,6 +61,13 @@ class User extends Authenticatable implements MustVerifyEmail
         });
     }
 
+    /**
+     * Registers a new user with the given email and password.
+     *
+     * @param string $email The email address of the user.
+     * @param string $password The password for the user.
+     * @return self The newly created user instance.
+     */
     public static function register(string $email, string $password): self
     {
         return static::create([

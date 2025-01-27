@@ -23,7 +23,6 @@ class AuthController extends Controller
     /**
      * @lrd:start
      * This method allows the user to register with the system
-     *
      * @lrd:end
      */
     public function register(RegisterRequest $request): Response
@@ -45,7 +44,6 @@ class AuthController extends Controller
     /**
      * @lrd:start
      * This method login user to system
-     *
      * @lrd:end
      */
     public function login(LoginRequest $request)
@@ -69,7 +67,6 @@ class AuthController extends Controller
     /**
      * @lrd:start
      * This method allows user to logout
-     *
      * @lrd:end
      */
     public function logout(Request $request): Response

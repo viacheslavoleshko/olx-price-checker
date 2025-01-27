@@ -21,7 +21,10 @@ class AdvertController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * @lrd:start
+     * Display a listing of the subscribed adverts prices.
+     * @lrd:end
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
@@ -29,37 +32,33 @@ class AdvertController extends Controller
         return AdvertResource::collection($advertsPrices);
     }
 
+    
     /**
-     * Store a newly created resource in storage.
+     * @lrd:start
+     * Subscribe to an advert.
+     * @lrd:end
+     *
+     * @param \App\Http\Requests\SubscribeAdvertRequest $request The request instance containing subscription details.
+     * @return \Illuminate\Http\Response
      */
-    public function subscribe(SubscribeAdvertRequest $request)
+    public function subscribe(SubscribeAdvertRequest $request): Response
     {
         $this->advertService->subscribe($request);
         return response(['message' => 'Subscribed.'], Response::HTTP_OK);
     }
 
+    
     /**
-     * Display the specified resource.
+     * @lrd:start
+     * Display the specified advert along with its prices.
+     * @lrd:end
+     *
+     * @param Advert $advert The advert instance to be displayed.
+     * @return \Illuminate\Http\Response The response containing the advert with prices.
      */
-    public function show(Advert $advert)
+    public function show(Advert $advert): Response
     {
         $prices = $this->advertService->getAdvertWithPrices($advert);
-        return response(new AdvertResource($prices));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return response(new AdvertResource($prices), Response::HTTP_OK);
     }
 }

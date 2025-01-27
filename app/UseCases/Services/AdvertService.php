@@ -24,7 +24,7 @@ class AdvertService
     /**
      * Get paginated prices for subscribed adverts.
      *
-     * @return array
+     * @return \Illuminate\Support\Collection
      */
     public function getSubscribedAdvertsPrices(): Collection
     {

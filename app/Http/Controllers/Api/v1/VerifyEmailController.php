@@ -12,6 +12,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 class VerifyEmailController extends Controller
 {
+    /**
+     * @lrd:start
+     * Handle the incoming request to verify a user's email.
+     * @lrd:end
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     *
+     */
     public function __invoke(Request $request): Response
     {
         $user = User::find($request->route('id'));

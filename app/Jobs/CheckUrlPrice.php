@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\User;
 use App\Models\Advert;
+use Illuminate\Support\Facades\DB;
 use App\Jobs\SendPriceUpdateEmails;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\InteractsWithQueue;
@@ -40,22 +41,26 @@ class CheckUrlPrice implements ShouldQueue
 
         if ($advertData) {
             if ($this->advert->title != $advertData->title || $this->advert->url != $advertData->url) {
-                $this->advert->update([
-                    'title' => $advertData->title,
-                    'url' => $advertData->url,
-                ]);
+                DB::transaction(function () use ($advertData) {
+                    $this->advert->update([
+                        'title' => $advertData->title,
+                        'url' => $advertData->url,
+                    ]);
+                });
             }
     
             $latestPrice = $this->advert->prices()->latest('created_at')->first();
     
             if(!$latestPrice || $latestPrice->value != $advertData->value) {
-                $this->advert->prices()->create([
-                    'value' => $advertData->value,
-                    'currency' => $advertData->currency,
-                    'negotiable' => $advertData->negotiable,
-                    'trade' => $advertData->trade,
-                    'budget' => $advertData->budget,
-                ]);
+                DB::transaction(function () use ($advertData) {
+                    $this->advert->prices()->create([
+                        'value' => $advertData->value,
+                        'currency' => $advertData->currency,
+                        'negotiable' => $advertData->negotiable,
+                        'trade' => $advertData->trade,
+                        'budget' => $advertData->budget,
+                    ]);
+                });
     
                 User::subscribers($this->advert->id)->chunk(100, function ($users) {
                     $emails = $users->pluck('email')->toArray();
@@ -65,6 +70,11 @@ class CheckUrlPrice implements ShouldQueue
 
             }
         } else {
+            DB::transaction(function () {
+            	$this->advert->update([
+                    'is_active' => false,
+                ]);
+            });
             Log::error("Advert data not found for advert with ID: {$this->advert->id}");
         }
     }

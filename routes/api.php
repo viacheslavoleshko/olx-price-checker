@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Route;
 
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Api\v1\AuthController;
-use App\Http\Controllers\Api\v1\CheckerController;
 use App\Http\Controllers\Api\v1\AdvertController;
 use App\Http\Controllers\Api\v1\VerifyEmailController;
 

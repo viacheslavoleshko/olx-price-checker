@@ -11,6 +11,7 @@
         "laravel/framework": "^11.31",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
+        "rakutentech/laravel-request-docs": "^2.41",
         "symfony/css-selector": "^7.2",
         "symfony/dom-crawler": "^7.2"
     },

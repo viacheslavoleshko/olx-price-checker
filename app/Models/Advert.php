@@ -13,6 +13,7 @@ class Advert extends Model
     protected $fillable = [
         'title',
         'url',
+        'is_active',
     ];
 
     /**

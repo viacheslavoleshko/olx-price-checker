@@ -29,8 +29,8 @@ class ProcessCheckUrlPrice extends Command
      */
     public function handle(): void
     {
-        $adverts = Advert::all();
-        foreach ($adverts as $advert) {
+        $activeAdverts = Advert::where('is_active', true)->get();
+        foreach ($activeAdverts as $advert) {
             CheckUrlPrice::dispatch($advert);
         }
     }
