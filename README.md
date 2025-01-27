@@ -45,7 +45,7 @@ The OLX Price Checker is a Laravel-based application designed to monitor and upd
 
 To run PHPUnit tests: `php artisan test`
 
-## Running The Scheduler
+## Running the Scheduler
 
 1) `php artisan schedule:work` to start scheduler
 
@@ -57,25 +57,28 @@ You can change `QUEUE_CONNECTION` in `.env` if you need
 
 To start mailing you need change credentials in `.env` file
 
- `MAIL_MAILER`
- `MAIL_HOST`
- `MAIL_PORT`
- `MAIL_USERNAME`
- `MAIL_PASSWORD`
+ ```
+ MAIL_MAILER
+ MAIL_HOST
+ MAIL_PORT
+ MAIL_USERNAME
+ MAIL_PASSWORD
+ ```
 
 You can use mailtrap.io etc. for mail testing
 
 ## Project support
 
-Request docs & OpenAPI: `/request-docs`
+> Request docs & OpenAPI: `/request-docs`
+> Also you can interesting in: [MySQL database scheme](https://drawsql.app/teams/test-4184/diagrams/olx-price-checker)
 
-Register: `api/v1/auth/register`
-Login: `api/v1/auth/login`
-Logout: `api/v1/auth/logout`
-Get additional verification email: `api/v1/email/verification-notification`
-Subscribe to advert price update: `api/v1/advert/subscribe`
-Get subscribed adverts prices: `api/v1/advert/prices`
-Get specific advert prices: `api/v1/advert/{advert}/prices`
+> Register: `api/v1/auth/register`
+> Login: `api/v1/auth/login`
+> Logout: `api/v1/auth/logout`
+> Get additional verification email: `api/v1/email/verification-notification`
+> Subscribe to advert price update: `api/v1/advert/subscribe`
+> Get subscribed adverts prices: `api/v1/advert/prices`
+> Get specific advert prices: `api/v1/advert/{advert}/prices`
 
 1) Register using your `email` and `password`
 2) Get email verification url in your mailbox
