@@ -67,6 +67,14 @@ To start mailing you need change credentials in `.env` file
 
 You can use mailtrap.io etc. for mail testing
 
+## OLX Partner API integration
+
+To work with API and get advert data from API you need pass your api token on `.env` file 
+
+```
+OLX_API_KEY="your_olx_access_token"
+```
+
 ## Project support
 
 > Request docs & OpenAPI: `/request-docs`
