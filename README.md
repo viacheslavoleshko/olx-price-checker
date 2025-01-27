@@ -65,7 +65,7 @@ To start mailing you need change credentials in `.env` file
  MAIL_PASSWORD
  ```
 
-You can use mailtrap.io etc. for mail testing
+You can use [mailtrap servise](https://mailtrap.io/) etc. for mail testing
 
 ## OLX Partner API integration
 
