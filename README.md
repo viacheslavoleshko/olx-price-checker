@@ -69,7 +69,7 @@ You can use [mailtrap servise](https://mailtrap.io/) etc. for mail testing
 
 ## OLX Partner API integration
 
-To work with API and get advert data from API you need pass your api token on `.env` file 
+To get advert data from official OLX API you need pass your api token in `.env` file 
 
 ```
 OLX_API_KEY="your_olx_access_token"
