@@ -79,7 +79,7 @@ OLX_API_KEY="your_olx_access_token"
 
 > Request docs & OpenAPI: `/request-docs`
 
-> Also you can interesting in: [MySQL database scheme](https://drawsql.app/teams/test-4184/diagrams/olx-price-checker)
+> Also you can interesting in: [MySQL database schema](https://drawsql.app/teams/test-4184/diagrams/olx-price-checker)
 
 
 - Register: `api/v1/auth/register`
