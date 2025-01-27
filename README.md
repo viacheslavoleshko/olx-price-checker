@@ -1,66 +1,85 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# OLX price checker
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Description 
 
-## About Laravel
+The OLX Price Checker is a Laravel-based application designed to monitor and update the prices of advertisements on the OLX platform. It periodically checks the prices of listed advertisements and notifies users of any changes.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
+*  Price Monitoring: Regularly checks the prices of advertisements on OLX.
+*  Notifications: Sends email notifications to users when the price of an advertisement changes.
+*  API and Web Scraping: Uses both the OLX API and web scraping to fetch advertisement data.
+*  Queue Workers: Processes tasks asynchronously using Laravel's queue system.
+*  Email Verification: Verifies user email addresses upon registration.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+##  First Install
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1) `git clone <path to remote repositiry> olx-price-checker`
+2) `cd olx-price-checker`
+3) `cp .env.example .env`
+4) Change credentials in `.env` file if you need
+5) `docker-compose build`
+6) `docker-compose up  -d`
+7) `docker ps`
+8)  Find \<container-id\> `olx-price-checker-php-fpm-1`
+9)  `docker exec -it  <container-id> bash`
+10) `composer install`
+11) `php artisan migrate  --seed`
+12) `php artisan key:generate`
+13) `exit`
+14) `sudo chmod -R 777 storage`
+15) `sudo chmod -R 777 bootstrap/cache/`
 
-## Learning Laravel
+## Updating
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+1) `cd <path-to-folder-olx-price-checker>`
+2) `git pull`
+3) `docker ps`
+4) Find \<container-id\> `olx-price-checker-php-fpm-1`
+5) `docker exec -it  <container-id> bash`
+6) `composer install` if you need
+7) `php artisan migrate`
+8) `queue:restart` to restart current queue workers after code updating
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Testing
 
-## Laravel Sponsors
+To run PHPUnit tests: `php artisan test`
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Running The Scheduler
 
-### Premium Partners
+1) `php artisan schedule:work` to start scheduler
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Queues will be working automatically
 
-## Contributing
+You can change `QUEUE_CONNECTION` in `.env` if you need
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+##  Mailing
 
-## Code of Conduct
+To start mailing you need change credentials in `.env` file
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+ `MAIL_MAILER`
+ `MAIL_HOST`
+ `MAIL_PORT`
+ `MAIL_USERNAME`
+ `MAIL_PASSWORD`
 
-## Security Vulnerabilities
+You can use mailtrap.io etc. for mail testing
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Project support
 
-## License
+Request docs & OpenAPI: `/request-docs`
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Register: `api/v1/auth/register`
+Login: `api/v1/auth/login`
+Logout: `api/v1/auth/logout`
+Get additional verification email: `api/v1/email/verification-notification`
+Subscribe to advert price update: `api/v1/advert/subscribe`
+Get subscribed adverts prices: `api/v1/advert/prices`
+Get specific advert prices: `api/v1/advert/{advert}/prices`
+
+1) Register using your `email` and `password`
+2) Get email verification url in your mailbox
+3) Put your `access_token` in header `-H "Authorization: Bearer access_token"`
+4) Subscribe to advert price update using olx.ua url
+5) If price will be updated, you get notified by mail
+6) You can get price updating history using appropriate endpoints
